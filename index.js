@@ -6,7 +6,7 @@ const port = 3000;
 const server = createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-  res.end('Hola Apendices SENA CEET, Tecnologos de ADSO 2024');
+  res.end('Hola Apendices SENA CEET, Tecnologos de ADSO');
 });
 
 server.listen(port, hostname, () => {
