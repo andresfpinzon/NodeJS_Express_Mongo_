@@ -4,8 +4,8 @@
   "description": "Servidor Web con Node js",
   "main": "index.js",
   "scripts": {
-    "start":"node index.js",
-    "dev":"nodemon index.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,7 +23,9 @@
   "author": "Andres Felipe Pinzon Parra",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "@hapi/joi": "^17.1.1",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
