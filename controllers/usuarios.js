@@ -31,9 +31,9 @@ async function crearUsuario(body) {
 }
 
 // ruta Get
-ruta.get('/',(req,res)=>{
+/*ruta.get('/',(req,res)=>{
     res.json('respuesta a peticion GET de USUARIOS funcionando correctamente...')
-});
+}); */
 
 //Ruta Post
 
@@ -129,6 +129,30 @@ ruta.delete('/:email', (req, res) => {
         })
     });
 });
+
+// Funcion asincrona para listar todos los usuarios activos 
+
+async function listarUsuariosActivos(){
+    let usuarios = await Usuario.find({"estado": true});
+    return usuarios;
+}
+
+
+//Endpoint de tipo GET para el recurso usuarios. Lista todos los usuarios
+
+ruta.get('/', (req, res)=>{
+    let resultado = listarUsuariosActivos();
+    resultado.then(usuarios =>{
+        res.json(usuarios)
+    }).catch(err=>{
+        res.status(400).json({
+            message:'Error al listar los usuarios activos',
+            error:err.message
+        })
+    })
+})
+
+
 
 module.exports = ruta;
 
