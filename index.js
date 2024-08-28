@@ -1,11 +1,11 @@
 const usuarios = require('./controllers/usuarios')
-const cursos = require('./controllers/usuarios')
+const cursos = require('./controllers/cursos')
 
 const express = require('express');
 const mongoose = require('mongoose');
 
 // Conexión a la base de datos mongodb
-mongoose.connect('mongodb://localhost:27017/userscoursesdb', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost:27017/userscoursesdb')
     .then(() => console.log('Conectado a MongoDB...'))
     .catch(err => console.log('No se pudo conectar con MongoDB...', err));
 
