@@ -1,34 +1,6 @@
 const express = require('express');
-const Usuario = require('../models/usuario_model');
 const ruta = express.Router();
-
-// import de joi
-
-const Joi = require('joi'); 
-
-// Validaciones para el objeto usuario
-
-const schema = Joi.object({
-    nombre: Joi.string()
-        .min(3)
-        .max(30)
-        .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/), 
-    password: Joi.string()
-        .pattern(/^[a-zA-Z0-9]{3,30}$/),
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'co'] } })
-});
-
-// Función asíncrona para crear un objeto de tipo usuario
-async function crearUsuario(body) {
-    let usuario = new Usuario({
-        email: body.email,
-        nombre: body.nombre,
-        password: body.password
-    });
-    return await usuario.save();
-}
+const logic = require('../logic/usuario_logic')
 
 // ruta Get
 /*ruta.get('/',(req,res)=>{
@@ -40,7 +12,7 @@ async function crearUsuario(body) {
 ruta.post('/', async (req, res) => {
     let body = req.body;
 
-    const { error, value } = schema.validate({
+    const { error, value } = logic.schema.validate({
         nombre: body.nombre,
         email: body.email,
         password: body.password
@@ -48,7 +20,7 @@ ruta.post('/', async (req, res) => {
 
     if (!error) {
         try {
-            let usuario = await crearUsuario(body); 
+            let usuario = await logic.crearUsuario(body); 
             res.json({
                 valor: usuario
             });
@@ -64,28 +36,15 @@ ruta.post('/', async (req, res) => {
     }
 });
 
-// ruta put
-
-// Funcion asincronica para actualizar un usuario
-
-async function actualizarUsuario(email,body){
-    let usuario = await Usuario.findOneAndUpdate({"email": email}, {
-        $set: {
-            nombre: body.nombre,
-            password: body.password
-        } 
-    }, {new: true});
-    return usuario;
-}
 
 // Endpoint de tipo PUT para actualizar los datos del usuario
 
 ruta.put('/:email', async (req, res) => {
 
-    const { error, value } = schema.validate({nombre: req.body.nombre});
+    const { error, value } = logic.schema.validate({nombre: req.body.nombre});
 
     if (!error) {
-        let resultado = actualizarUsuario(req.params.email, req.body);
+        let resultado = logic.actualizarUsuario(req.params.email, req.body);
         resultado.then(valor => {
             res.json({
                 valor
@@ -104,21 +63,10 @@ ruta.put('/:email', async (req, res) => {
     }
 });
 
-// Funcion asincronica para actualizar un usuario
-
-async function desactivarUsuario(email){
-    let usuario = await Usuario.findOneAndUpdate({"email": email}, {
-        $set: {
-            estado: false
-        } 
-    }, {new: true});
-    return usuario;
-}
-
 // Endpoint de tipo DELETE para el recurso USUARIOS
 
 ruta.delete('/:email', (req, res) => {
-    let resultado = desactivarUsuario(req.params.email);
+    let resultado = logic.desactivarUsuario(req.params.email);
     resultado.then(valor => {
         res.json({
             usuario: valor
@@ -130,18 +78,10 @@ ruta.delete('/:email', (req, res) => {
     });
 });
 
-// Funcion asincrona para listar todos los usuarios activos 
-
-async function listarUsuariosActivos(){
-    let usuarios = await Usuario.find({"estado": true});
-    return usuarios;
-}
-
-
 //Endpoint de tipo GET para el recurso usuarios. Lista todos los usuarios
 
 ruta.get('/', (req, res)=>{
-    let resultado = listarUsuariosActivos();
+    let resultado = logic.listarUsuariosActivos();
     resultado.then(usuarios =>{
         res.json(usuarios)
     }).catch(err=>{
