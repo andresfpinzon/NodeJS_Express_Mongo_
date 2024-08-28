@@ -1,6 +1,6 @@
 const express = require('express');
 const ruta = express.Router();
-const logic = require('../logic/curso_logic')
+const logic = require('../logic/curso_logic');
 
 /*
 ruta.get('/',(req,res)=>{
@@ -9,29 +9,57 @@ ruta.get('/',(req,res)=>{
 */
 
 //Endpoint de tipo POST para el recurso CURSOS
-ruta.post('/', (req, res)=>{
-    let resultado = logic.crearCurso(req.body);
+ruta.post('/', async (req, res)=>{
+    let body = req.body;
 
-    resultado.then(curso=>{
-        res.json({
-            curso
-        })
-    }).catch(err =>{
+    const { error, value } = logic.schema.validate({
+        titulo: body.titulo,
+        descripcion: body.descripcion,
+        alumnos: body.alumnos,
+        calificacion: body.calificacion
+    });
+
+    if(!error){
+        try{
+            let curso = await logic.crearCurso(req.body);
+            res.json({
+                valor: curso
+            });
+        }catch (err) {
+            res.status(400).json({
+                error: err.message
+            });
+        }
+    } else {
         res.status(400).json({
-            err
+            error: error.details[0].message
         })
-    })
+    }
 });
 
 //Endpoint de tipos PUT para actualizar los cursos
 
 ruta.put('/:id', (req, res)=>{
-    let resultado = logic.actualizarCurso(req.params.id, req.body);
-    resultado.then(curso =>{
-        res.json(curso)
-    }).catch(err=>{
-        res.status(400).json(err)
-    })
+
+    const { error, value } = logic.schema.validate({
+        titulo: req.body.titulo, 
+        descripcion: req.body.descripcion,
+        alumnos: req.body.alumnos,
+        calificacion: req.body.calificacion
+    });
+    
+    if (!error){
+        let resultado = logic.actualizarCurso(req.params.id, req.body);
+        resultado.then(curso => {
+            res.json(curso)
+        }).catch(err=>{
+            res.status(400).json(err)
+        })
+    } else {
+        res.status(400).json({
+            error
+        })
+    }
 });
 
 //Endpoindt de tipo DELETE para desactivar cursos
