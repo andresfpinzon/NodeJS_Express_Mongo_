@@ -1,11 +1,18 @@
+
+// traemos el archivo dotenv
+require('dotenv').config();
+
 const usuarios = require('./controllers/usuarios')
 const cursos = require('./controllers/cursos')
 
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Obtener la cadena de conexión desde las variables de entorno
+const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
+
 // Conexión a la base de datos mongodb
-mongoose.connect('mongodb://localhost:27017/userscoursesdb')
+mongoose.connect(connectionString)
     .then(() => console.log('Conectado a MongoDB...'))
     .catch(err => console.log('No se pudo conectar con MongoDB...', err));
 
