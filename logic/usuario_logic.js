@@ -1,24 +1,15 @@
 const Usuario = require('../models/usuario_model');
-// import de joi
-const Joi = require('joi'); 
-
-// Validaciones para el objeto usuario
-
-const schema = Joi.object({
-    nombre: Joi.string()
-        .min(3)
-        .max(30)
-        .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/), 
-    password: Joi.string()
-        .pattern(/^[a-zA-Z0-9]{3,30}$/),
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'co'] } })
-});
 
 // Función asíncrona para crear un objeto de tipo usuario
 
 async function crearUsuario(body) {
+
+    // verificamos si el usuario ya existe en nuestra base de datos 
+    let usuarioExistente = await Usuario.findOne({ email: body.email });
+    if (usuarioExistente) {
+        throw new Error('Un usuario registrado con ese email ya existe.');
+    }
+
     let usuario = new Usuario({
         email: body.email,
         nombre: body.nombre,
@@ -58,7 +49,6 @@ async function listarUsuariosActivos(){
 }
 
 module.exports ={
-    schema,
     crearUsuario,
     actualizarUsuario,
     desactivarUsuario,

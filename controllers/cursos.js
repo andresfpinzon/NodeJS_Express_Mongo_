@@ -1,6 +1,7 @@
 const express = require('express');
 const ruta = express.Router();
 const logic = require('../logic/curso_logic');
+const schema = require('../validation/curso_validation');
 
 /*
 ruta.get('/',(req,res)=>{
@@ -12,7 +13,7 @@ ruta.get('/',(req,res)=>{
 ruta.post('/', async (req, res)=>{
     let body = req.body;
 
-    const { error, value } = logic.schema.validate({
+    const { error, value } = schema.validate({
         titulo: body.titulo,
         descripcion: body.descripcion,
         alumnos: body.alumnos,
@@ -41,7 +42,7 @@ ruta.post('/', async (req, res)=>{
 
 ruta.put('/:id', (req, res)=>{
 
-    const { error, value } = logic.schema.validate({
+    const { error, value } = schema.validate({
         titulo: req.body.titulo, 
         descripcion: req.body.descripcion,
         alumnos: req.body.alumnos,
@@ -53,7 +54,9 @@ ruta.put('/:id', (req, res)=>{
         resultado.then(curso => {
             res.json(curso)
         }).catch(err=>{
-            res.status(400).json(err)
+            res.status(400).json({
+                error: err.message
+            })
         })
     } else {
         res.status(400).json({

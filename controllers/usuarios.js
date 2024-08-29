@@ -1,6 +1,7 @@
 const express = require('express');
 const ruta = express.Router();
 const logic = require('../logic/usuario_logic')
+const schema  = require('../validation/usuario_validation');
 
 // ruta Get
 /*ruta.get('/',(req,res)=>{
@@ -12,7 +13,7 @@ const logic = require('../logic/usuario_logic')
 ruta.post('/', async (req, res) => {
     let body = req.body;
 
-    const { error, value } = logic.schema.validate({
+    const { error, value } = schema.validate({
         nombre: body.nombre,
         email: body.email,
         password: body.password
@@ -41,7 +42,7 @@ ruta.post('/', async (req, res) => {
 
 ruta.put('/:email', async (req, res) => {
 
-    const { error, value } = logic.schema.validate({nombre: req.body.nombre});
+    const { error, value } = schema.validate({nombre: req.body.nombre});
 
     if (!error) {
         let resultado = logic.actualizarUsuario(req.params.email, req.body);
@@ -51,7 +52,7 @@ ruta.put('/:email', async (req, res) => {
             })
         }).catch(err => {
             res.status(400).json({
-                err
+                error: err.message
             })
         })
 

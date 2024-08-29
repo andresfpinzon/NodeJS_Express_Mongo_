@@ -1,34 +1,15 @@
 const Curso = require('../models/curso_model');
-const Joi = require('joi'); 
-
-// Validaciones para el objeto curso
-
-const schema = Joi.object({
-    titulo: Joi.string()
-        .min(3)
-        .max(100)
-        .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/), 
-    descripcion: Joi.string()
-        .min(3)
-        .max(260)
-        .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/),
-    alumnos: Joi.number() 
-        .integer()
-        .min(1)
-        .max(100)
-        .required(),
-    calificacion: Joi.number()
-        .precision(1)
-        .min(1)
-        .max(10)
-        .required()   
-});
 
 // Función asíncrona para crear un objeto de tipo usuario
 
 async function crearCurso(body){
+
+    // verificamos si el curso ya existe en nuestra base de datos
+    let cursoExistente = await Curso.findOne({ titulo: body.titulo });
+    if (cursoExistente) {
+        throw new Error('Un Curso registrado con ese nombre ya existe.');
+    }
+
     let curso = new Curso({
         titulo  :body.titulo,
         descripcion : body.descripcion,
@@ -41,6 +22,12 @@ async function crearCurso(body){
 //Funcion asincrona para actualizar cursos
 
 async function actualizarCurso(id, body){
+
+    let cursoExistente = await Curso.findOne({ titulo: body.titulo });
+    if (cursoExistente && cursoExistente._id.toString() !== id) {
+        throw new Error('Un curso con ese nombre ya existe.');
+    }
+    
     let curso = await Curso.findByIdAndUpdate(id,{
         $set:{
             titulo: body.titulo,
@@ -72,7 +59,6 @@ async function listarCursosActivos() {
 }
 
 module.exports={
-    schema,
     crearCurso,
     actualizarCurso,
     desactivarCurso,
