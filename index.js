@@ -2,8 +2,11 @@
 // traemos el archivo dotenv
 require('dotenv').config();
 
-const usuarios = require('./controllers/usuarios')
-const cursos = require('./controllers/cursos')
+//const usuarios = require('./controllers/usuarios')
+//const cursos = require('./controllers/cursos')
+
+const usuarioRoutes = require('./routes/usuario_routes');
+const cursoRoutes = require('./routes/curso_routes');
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -22,8 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // end points (recursos)
-app.use('/api/usuarios', usuarios);
-app.use('/api/cursos', cursos);
+app.use('/api/usuarios', usuarioRoutes);
+app.use('/api/cursos', cursoRoutes);
 
 
 const port = process.env.PORT || 3000;

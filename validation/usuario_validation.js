@@ -1,7 +1,6 @@
 const Joi = require('joi'); 
 
 // Validaciones para el objeto usuario
-
 const schema = Joi.object({
     nombre: Joi.string()
         .min(3)

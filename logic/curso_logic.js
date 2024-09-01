@@ -1,9 +1,7 @@
 const Curso = require('../models/curso_model');
 
 // Función asíncrona para crear un objeto de tipo usuario
-
 async function crearCurso(body){
-
     // verificamos si el curso ya existe en nuestra base de datos
     let cursoExistente = await Curso.findOne({ titulo: body.titulo });
     if (cursoExistente) {
@@ -20,7 +18,6 @@ async function crearCurso(body){
 }
 
 //Funcion asincrona para actualizar cursos
-
 async function actualizarCurso(id, body){
 
     let cursoExistente = await Curso.findOne({ titulo: body.titulo });
@@ -40,7 +37,6 @@ return curso;
 }
 
 //Funcion asincrona para Desacticar cursos
-
 async function desactivarCurso(id){
     let curso = await Curso.findByIdAndUpdate(id,{
         $set:{
@@ -51,7 +47,6 @@ return curso;
 }
 
 //Funcion asincrona para listar los cursos activos
-
 async function listarCursosActivos() {
     let cursos = await Curso.find({"estado": true});
     return cursos;

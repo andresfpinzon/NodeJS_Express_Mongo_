@@ -1,7 +1,6 @@
 const Usuario = require('../models/usuario_model');
 
 // Función asíncrona para crear un objeto de tipo usuario
-
 async function crearUsuario(body) {
 
     // verificamos si el usuario ya existe en nuestra base de datos 
@@ -19,7 +18,6 @@ async function crearUsuario(body) {
 }
 
 // Funcion asincronica para actualizar un usuario
-
 async function actualizarUsuario(email,body){
     let usuario = await Usuario.findOneAndUpdate({"email": email}, {
         $set: {
@@ -31,7 +29,6 @@ async function actualizarUsuario(email,body){
 }
 
 // Funcion asincronica para actualizar un usuario
-
 async function desactivarUsuario(email){
     let usuario = await Usuario.findOneAndUpdate({"email": email}, {
         $set: {
@@ -42,7 +39,6 @@ async function desactivarUsuario(email){
 }
 
 // Funcion asincrona para listar todos los usuarios activos 
-
 async function listarUsuariosActivos(){
     let usuarios = await Usuario.find({"estado": true});
     return usuarios;
