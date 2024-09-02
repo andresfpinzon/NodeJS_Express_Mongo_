@@ -10,7 +10,10 @@ const schema = Joi.object({
     password: Joi.string()
         .pattern(/^[a-zA-Z0-9]{3,30}$/),
     email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'co'] } })
+        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'edu', 'co'] } }),
+    cursos: Joi.array()
+        .items(Joi.string()
+        .pattern(/^[0-9a-fA-F]{24}$/))
 });
 
 module.exports= schema

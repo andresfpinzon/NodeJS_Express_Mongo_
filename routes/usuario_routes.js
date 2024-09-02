@@ -11,5 +11,7 @@ router.post('/', usuarioController.crearUsuario);
 router.put('/:email', usuarioController.actualizarUsuario);
 // Ruta DELETE
 router.delete('/:email', usuarioController.desactivarUsuario);
+// Crear una colección de usuarios
+router.post('/coleccion', usuarioController.crearColeccionUsuarios);
 
 module.exports = router;

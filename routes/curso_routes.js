@@ -11,5 +11,7 @@ router.post('/', cursoController.crearCurso);
 router.put('/:id', cursoController.actualizarCurso);
 // Ruta DELETE
 router.delete('/:id', cursoController.desactivarCurso);
+// Crear una colección de usuarios
+router.post('/coleccion', cursoController.crearColeccionCursos);
 
 module.exports = router;

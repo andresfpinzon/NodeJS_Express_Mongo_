@@ -56,9 +56,36 @@ function listarCursosActivos(req, res) {
         .catch(err => res.status(400).json(err));
 };
 
+async function crearColeccionCursos (req, res) {
+    const cursos = req.body.cursos; // Aquí esperas un array de cursos
+
+    const resultados = [];
+    for (let i = 0; i < cursos.length; i++) {
+        const { error, value } = schema.validate({
+            titulo: cursos[i].titulo,
+            descripcion: cursos[i].descripcion,
+            alumnos: cursos[i].alumnos,
+            calificacion: cursos[i].calificacion
+        });
+
+        if (!error) {
+            try {
+                let curso = await logic.crearCurso(cursos[i]);
+                resultados.push({ valor: curso });
+            } catch (err) {
+                resultados.push({ error: err.message });
+            }
+        } else {
+            resultados.push({ error: error.details[0].message });
+        }
+    }
+    res.json(resultados);
+};
+
 module.exports = {
     crearCurso,
     actualizarCurso,
     desactivarCurso,
-    listarCursosActivos
+    listarCursosActivos,
+    crearColeccionCursos 
 }
