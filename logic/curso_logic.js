@@ -1,9 +1,8 @@
 const Curso = require('../models/curso_model');
+const Usuario = require('../models/usuario_model');
 
 // Función asíncrona para crear un objeto de tipo usuario
-
 async function crearCurso(body){
-
     // verificamos si el curso ya existe en nuestra base de datos
     let cursoExistente = await Curso.findOne({ titulo: body.titulo });
     if (cursoExistente) {
@@ -19,8 +18,7 @@ async function crearCurso(body){
     return await curso.save();
 }
 
-//Funcion asincrona para actualizar cursos
-
+// Funcion asincrona para actualizar cursos
 async function actualizarCurso(id, body){
 
     let cursoExistente = await Curso.findOne({ titulo: body.titulo });
@@ -39,8 +37,7 @@ async function actualizarCurso(id, body){
 return curso;
 }
 
-//Funcion asincrona para Desacticar cursos
-
+// Funcion asincrona para Desacticar cursos
 async function desactivarCurso(id){
     let curso = await Curso.findByIdAndUpdate(id,{
         $set:{
@@ -50,17 +47,36 @@ async function desactivarCurso(id){
 return curso;
 }
 
-//Funcion asincrona para listar los cursos activos
-
+// Funcion asincrona para listar los cursos activos
 async function listarCursosActivos() {
     let cursos = await Curso.find({"estado": true});
     return cursos;
     
 }
 
+// Funcion asincrona para obtener curso por ID
+async function obtenerCursoPorId(id) {
+    let curso = await Curso.findById(id);
+    if (!curso) {
+        throw new Error('Curso no encontrado');
+    }
+    return curso;
+}
+
+// Funcion asincrona para obtener usuarios por ID de curso
+async function obtenerUsuariosPorCursoId(cursoId) {
+    let usuarios = await Usuario.find({ cursos: cursoId, estado: true });
+     if (!usuarios) {
+        throw new Error('No se encontraron usuarios para este curso');
+    }
+    return usuarios;
+}
+
 module.exports={
     crearCurso,
     actualizarCurso,
     desactivarCurso,
-    listarCursosActivos
+    listarCursosActivos,
+    obtenerCursoPorId,
+    obtenerUsuariosPorCursoId
 }

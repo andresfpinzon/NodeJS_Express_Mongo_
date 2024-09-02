@@ -1,7 +1,6 @@
 const Joi = require('joi'); 
 
 // Validaciones para el objeto curso
-
 const schema = Joi.object({
     titulo: Joi.string()
         .min(3)
@@ -22,7 +21,8 @@ const schema = Joi.object({
         .precision(1)
         .min(1)
         .max(10)
-        .required()   
+        .required(),
+           
 });
 
 module.exports=schema

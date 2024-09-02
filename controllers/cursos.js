@@ -1,16 +1,8 @@
-const express = require('express');
-const ruta = express.Router();
 const logic = require('../logic/curso_logic');
 const schema = require('../validation/curso_validation');
 
-/*
-ruta.get('/',(req,res)=>{
-    res.json('respuesta a peticion GET de CURSOS funcionando correctamente...')
-});
-*/
-
-//Endpoint de tipo POST para el recurso CURSOS
-ruta.post('/', async (req, res)=>{
+// Crear curso
+async function crearCurso(req, res) {
     let body = req.body;
 
     const { error, value } = schema.validate({
@@ -20,71 +12,111 @@ ruta.post('/', async (req, res)=>{
         calificacion: body.calificacion
     });
 
-    if(!error){
-        try{
+    if (!error) {
+        try {
             let curso = await logic.crearCurso(req.body);
-            res.json({
-                valor: curso
-            });
-        }catch (err) {
-            res.status(400).json({
-                error: err.message
-            });
+            res.json({ valor: curso });
+        } catch (err) {
+            res.status(400).json({ error: err.message });
         }
     } else {
-        res.status(400).json({
-            error: error.details[0].message
-        })
+        res.status(400).json({ error: error.details[0].message });
     }
-});
+};
 
-//Endpoint de tipos PUT para actualizar los cursos
-
-ruta.put('/:id', (req, res)=>{
-
+// Actualizar curso
+function actualizarCurso(req, res) {
     const { error, value } = schema.validate({
-        titulo: req.body.titulo, 
+        titulo: req.body.titulo,
         descripcion: req.body.descripcion,
         alumnos: req.body.alumnos,
         calificacion: req.body.calificacion
     });
-    
-    if (!error){
-        let resultado = logic.actualizarCurso(req.params.id, req.body);
-        resultado.then(curso => {
-            res.json(curso)
-        }).catch(err=>{
-            res.status(400).json({
-                error: err.message
-            })
-        })
+
+    if (!error) {
+        logic.actualizarCurso(req.params.id, req.body)
+            .then(curso => res.json(curso))
+            .catch(err => res.status(400).json({ error: err.message }));
     } else {
-        res.status(400).json({
-            error
-        })
+        res.status(400).json({ error });
     }
-});
+};
 
-//Endpoindt de tipo DELETE para desactivar cursos
+// Desactivar curso
+function desactivarCurso(req, res) {
+    logic.desactivarCurso(req.params.id)
+        .then(curso => res.json(curso))
+        .catch(err => res.status(400).json(err));
+};
 
-ruta.delete('/:id', (req, res)=>{
-    let resultado = logic.desactivarCurso(req.params.id);
-    resultado.then(curso =>{
-        res.json(curso);
-    }).catch(err =>{
-        res.status(400).json(ert);
-    })
-})
+// Listar cursos activos
+function listarCursosActivos(req, res) {
+    logic.listarCursosActivos()
+        .then(cursos => res.json(cursos))
+        .catch(err => res.status(400).json(err));
+};
 
-//Endpoint tipo GET paral listar los cursos activos
+// Crear colecciones de cursos
+async function crearColeccionCursos (req, res) {
+    const cursos = req.body.cursos; 
 
-ruta.get('/', (req, res)=>{
-    let resultado = logic.listarCursosActivos();
-    resultado.then(cursos =>{
-        res.json(cursos);
-    }).catch(err=>{
-        res.status(400).json(err);
-    })
-})
+    const resultados = [];
+    for (let i = 0; i < cursos.length; i++) {
+        const { error, value } = schema.validate({
+            titulo: cursos[i].titulo,
+            descripcion: cursos[i].descripcion,
+            alumnos: cursos[i].alumnos,
+            calificacion: cursos[i].calificacion
+        });
 
-module.exports = ruta;
+        if (!error) {
+            try {
+                let curso = await logic.crearCurso(cursos[i]);
+                resultados.push({ valor: curso });
+            } catch (err) {
+                resultados.push({ error: err.message });
+            }
+        } else {
+            resultados.push({ error: error.details[0].message });
+        }
+    }
+    res.json(resultados);
+};
+
+// Obtener usuario por ID con sus cursos
+async function obtenerCursoConUsuarios(req, res) {
+    try {
+        const curso = await logic.obtenerCursoPorId(req.params.id);
+        if (!curso) {
+            return res.status(404).json({ error: 'Curso no encontrado' });
+        }
+        const usuarios = await logic.obtenerUsuariosPorCursoId(req.params.id);
+        res.json({ curso, usuarios });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+// Obtener curso por ID
+async function obtenerCursoPorId(req, res) {
+    try {
+        const curso = await logic.obtenerCursoPorId(req.params.id);
+        if (curso) {
+            res.json(curso);
+        } else {
+            res.status(404).json({ error: 'Curso no encontrado' });
+        }
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+module.exports = {
+    crearCurso,
+    actualizarCurso,
+    desactivarCurso,
+    listarCursosActivos,
+    crearColeccionCursos,
+    obtenerCursoConUsuarios,
+    obtenerCursoPorId 
+}

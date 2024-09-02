@@ -24,7 +24,11 @@ const cursoSchema = new mongoose.Schema({
     calificacion:{
         type:Number,
         default:0
-    }
+    },
+    usuarios: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Usuario' // Referencia al modelo usuario
+    }]
 });
 
 
