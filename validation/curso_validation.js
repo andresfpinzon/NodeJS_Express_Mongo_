@@ -6,12 +6,12 @@ const schema = Joi.object({
         .min(3)
         .max(100)
         .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/), 
+        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/), 
     descripcion: Joi.string()
         .min(3)
         .max(260)
         .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/),
+        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/),
     alumnos: Joi.number() 
         .integer()
         .min(1)
