@@ -56,8 +56,9 @@ function listarCursosActivos(req, res) {
         .catch(err => res.status(400).json(err));
 };
 
+// Crear colecciones de cursos
 async function crearColeccionCursos (req, res) {
-    const cursos = req.body.cursos; // Aquí esperas un array de cursos
+    const cursos = req.body.cursos; 
 
     const resultados = [];
     for (let i = 0; i < cursos.length; i++) {
@@ -82,10 +83,40 @@ async function crearColeccionCursos (req, res) {
     res.json(resultados);
 };
 
+// Obtener usuario por ID con sus cursos
+async function obtenerCursoConUsuarios(req, res) {
+    try {
+        const curso = await logic.obtenerCursoPorId(req.params.id);
+        if (!curso) {
+            return res.status(404).json({ error: 'Curso no encontrado' });
+        }
+        const usuarios = await logic.obtenerUsuariosPorCursoId(req.params.id);
+        res.json({ curso, usuarios });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+// Obtener curso por ID
+async function obtenerCursoPorId(req, res) {
+    try {
+        const curso = await logic.obtenerCursoPorId(req.params.id);
+        if (curso) {
+            res.json(curso);
+        } else {
+            res.status(404).json({ error: 'Curso no encontrado' });
+        }
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
 module.exports = {
     crearCurso,
     actualizarCurso,
     desactivarCurso,
     listarCursosActivos,
-    crearColeccionCursos 
+    crearColeccionCursos,
+    obtenerCursoConUsuarios,
+    obtenerCursoPorId 
 }

@@ -13,5 +13,14 @@ router.put('/:email', usuarioController.actualizarUsuario);
 router.delete('/:email', usuarioController.desactivarUsuario);
 // Crear una colección de usuarios
 router.post('/coleccion', usuarioController.crearColeccionUsuarios);
+// Obtener usuario con cursos 
+router.get('/:id/cursos', usuarioController.obtenerUsuarioConCursos);
+// Obtener Usuario por su id
+//router.get('/email/:email', usuarioController.obtenerUsuarioPorId);
+router.get('/:id', usuarioController.obtenerUsuarioPorId);
+// Asociar un curso a un usuario
+router.post('/:id/cursos/:cursoId', usuarioController.asociarCurso);
+
+
 
 module.exports = router;

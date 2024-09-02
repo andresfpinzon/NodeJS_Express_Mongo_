@@ -78,10 +78,56 @@ async function crearColeccionUsuarios (req, res) {
     res.json(resultados);
 };
 
+// Obtener usuario por ID con sus cursos
+async function obtenerUsuarioConCursos(req, res) {
+    try {
+        const usuario = await logic.obtenerUsuarioPorId(req.params.id); 
+        if (!usuario) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const cursos = await logic.obtenerCursosPorUsuarioId(req.params.id);
+        res.json({ usuario, cursos });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+// Obtener usuario por id
+async function obtenerUsuarioPorId(req, res) {
+    try {
+        //const usuario = await logic.obtenerUsuarioPorId(req.params.email);
+        const usuario = await logic.obtenerUsuarioPorId(req.params.id);
+        if (usuario) {
+            res.json(usuario);
+        } else {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
+// Asociar curso a usuario
+async function asociarCurso(req, res) {
+    try {
+        const usuarioId = req.params.id;
+        const cursoId = req.params.cursoId;
+
+        let usuario = await logic.asociarCursoAUsuario(usuarioId, cursoId);
+        res.json({ usuario });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+
 module.exports = {
     crearUsuario,
     actualizarUsuario,
     desactivarUsuario,
     listarUsuariosActivos,
-    crearColeccionUsuarios
+    crearColeccionUsuarios,
+    obtenerUsuarioConCursos,
+    obtenerUsuarioPorId,
+    asociarCurso
+
 };

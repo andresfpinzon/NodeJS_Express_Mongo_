@@ -1,4 +1,5 @@
 const Usuario = require('../models/usuario_model');
+const Curso = require('../models/curso_model');
 
 // Función asíncrona para crear un objeto de tipo usuario
 async function crearUsuario(body) {
@@ -45,9 +46,51 @@ async function listarUsuariosActivos(){
     return usuarios;
 }
 
+
+// Funcion asincrona para obtener usuario por ID
+async function obtenerUsuarioPorId(id) {
+    //let usuario = await Usuario.findOne({ email: email });
+    let usuario = await Usuario.findById(id);
+    if (!usuario) {
+        throw new Error('Usuario no encontrado');
+    }
+    return usuario;
+}
+
+// Funcion asincrona para obtener cursos por ID de usuario
+async function obtenerCursosPorUsuarioId(usuarioId) {
+    let usuario = await Usuario.findById(usuarioId).populate('cursos');
+    if (!usuario) {
+        throw new Error('Usuario no encontrado');
+    }
+    return usuario.cursos;
+}
+
+// Funcion asincronica para asociar un curso a un usuario
+async function asociarCursoAUsuario(usuarioId, cursoId) {
+    cursoId = cursoId.trim();
+    
+    let usuario = await Usuario.findById(usuarioId);
+    let curso = await Curso.findById(cursoId);
+    if (!usuario) {
+        throw new Error('Usuario no encontrado');
+    }
+    if (!curso) {
+        throw new Error('Curso no encontrado');
+    }
+    if (!usuario.cursos.includes(cursoId)) {
+        usuario.cursos.push(cursoId);
+        await usuario.save();
+    }
+    return usuario;
+}
+
 module.exports ={
     crearUsuario,
     actualizarUsuario,
     desactivarUsuario,
-    listarUsuariosActivos
+    listarUsuariosActivos,
+    obtenerUsuarioPorId,
+    obtenerCursosPorUsuarioId,
+    asociarCursoAUsuario
 }

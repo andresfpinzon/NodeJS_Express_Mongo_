@@ -13,5 +13,9 @@ router.put('/:id', cursoController.actualizarCurso);
 router.delete('/:id', cursoController.desactivarCurso);
 // Crear una colección de usuarios
 router.post('/coleccion', cursoController.crearColeccionCursos);
+// Obtener curso con usuarios
+router.get('/:id/usuarios', cursoController.obtenerCursoConUsuarios);
+// Obtener un curso por su id
+router.get('/:id', cursoController.obtenerCursoPorId);
 
 module.exports = router;
