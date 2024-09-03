@@ -11,6 +11,9 @@ const cursoRoutes = require('./routes/curso_routes');
 const express = require('express');
 const mongoose = require('mongoose');
 
+// Importar la configuración de Swagger
+const { swaggerUi, swaggerDocs } = require('./swagger');
+
 // Obtener la cadena de conexión desde las variables de entorno
 const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 
@@ -23,6 +26,9 @@ mongoose.connect(connectionString)
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Configuración de Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // end points (recursos)
 app.use('/api/usuarios', usuarioRoutes);

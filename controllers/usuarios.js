@@ -57,6 +57,7 @@ function listarUsuariosActivos(req, res) {
         }));
 };
 
+// Crear una coleccion de usuarios
 async function crearColeccionUsuarios (req, res) {
     const usuarios = req.body.usuarios;
 
