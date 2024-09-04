@@ -1,4 +1,3 @@
-const { ref } = require('joi');
 const mongoose = require('mongoose');
 
 const usuarioSchema = new mongoose.Schema({
@@ -24,7 +23,8 @@ const usuarioSchema = new mongoose.Schema({
     },
     cursos: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Curso' // Referencia al modelo Curso
+        ref: 'Curso', // Referencia al modelo Curso
+        required:false
     }]
 });
 
