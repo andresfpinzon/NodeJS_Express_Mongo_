@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 
 // Validaciones para el objeto usuario
-const schema = Joi.object({
+const usuarioSchemaValidation = Joi.object({
     email: Joi.string()
         .email({
             minDomainSegments: 2,
@@ -65,9 +65,6 @@ const schema = Joi.object({
             'array.base': 'Cursos debe ser un array',
             'string.pattern.base': 'Cada curso debe ser un ID de MongoDB válido (24 caracteres hexadecimales)'
         })
-
-
-
 });
 
-module.exports = schema;
+module.exports = usuarioSchemaValidation;

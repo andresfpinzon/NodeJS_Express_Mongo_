@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 
 // Validación para el objeto curso
-const schema = Joi.object({
+const cursoSchemaValidation = Joi.object({
     titulo: Joi.string()
         .min(5)
         .max(100)
@@ -63,5 +63,5 @@ const schema = Joi.object({
         }),
 });
 
-module.exports = schema;
+module.exports = cursoSchemaValidation;
     

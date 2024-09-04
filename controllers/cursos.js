@@ -1,142 +1,149 @@
 const logic = require('../logic/curso_logic');
-const schema = require('../validation/curso_validation');
-
-// Crear curso
-async function crearCurso(req, res) {
-    let body = req.body;
-
-    const { error, value } = schema.validate({
-        titulo: body.titulo,
-        descripcion: body.descripcion,
-        alumnos: body.alumnos,
-        calificacion: body.calificacion,
-        estado: body.estado,
-        imagen: body.imagen,
-        curso: body.curso
-    });
-
-    if (!error) {
-        try {
-            let curso = await logic.crearCurso(req.body);
-            res.json({ valor: curso });
-        } catch (err) {
-            res.status(400).json({ error: err.message });
-        }
-    } else {
-        res.status(400).json({ error: error.details[0].message });
-    }
-};
-
-// Actualizar curso
-function actualizarCurso(req, res) {
-    
-    const { error, value } = schema.validate({
-        titulo: req.body.titulo,
-        descripcion: req.body.descripcion,
-        alumnos: req.body.alumnos,
-        calificacion: req.body.calificacion,
-        estado: body.estado,
-        imagen: body.imagen
-    });
-
-    if (!error) {
-        logic.actualizarCurso(req.params.id, req.body)
-            .then(curso => res.json(curso))
-            .catch(err => res.status(400).json({ error: err.message }));
-    } else {
-        res.status(400).json({ error });
-    }
-};
-
-// Desactivar curso
-function desactivarCurso(req, res) {
-    logic.desactivarCurso(req.params.id)
-        .then(curso => res.json(curso))
-        .catch(err => res.status(400).json(err));
-};
-
-/*
-// Listar cursos activos
-function listarCursosActivos(req, res) {
-    logic.listarCursosActivos()
-        .then(cursos => res.json(cursos))
-        .catch(err => res.status(400).json(err));
-};*/
+const  cursoSchemaValidation  = require('../validations/curso_validations'); // Importa la validación
 
 // Controlador para listar los cursos activos
 const listarCursosActivos = async (req, res) => {
-    try {
-        const cursosActivos = await logic.listarCursosActivos();
-        if (cursosActivos.length === 0) {
-        return res.status(204).send(); // 204 No Content
-        }
-        res.json(cursosActivos);
-    } catch (err) {
-        res.status(500).json({ error: 'Error interno del servidor' });
+  try {
+    const cursosActivos = await logic.listarCursosActivos();
+    if (cursosActivos.length === 0) {
+      return res.status(204).send(); // 204 No Content
     }
+    res.json(cursosActivos);
+  } catch (err) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
-// Crear colecciones de cursos
-async function crearColeccionCursos (req, res) {
-    const cursos = req.body.cursos; 
-
-    const resultados = [];
-    for (let i = 0; i < cursos.length; i++) {
-        const { error, value } = schema.validate({
-            titulo: cursos[i].titulo,
-            descripcion: cursos[i].descripcion,
-            alumnos: cursos[i].alumnos,
-            calificacion: cursos[i].calificacion
-        });
-
-        if (!error) {
-            try {
-                let curso = await logic.crearCurso(cursos[i]);
-                resultados.push({ valor: curso });
-            } catch (err) {
-                resultados.push({ error: err.message });
-            }
-        } else {
-            resultados.push({ error: error.details[0].message });
-        }
+// Controlador para crear un curso
+const crearCurso = async (req, res) => {
+  const body = req.body;
+  const { error, value } = cursoSchemaValidation.validate({
+    titulo: body.titulo,
+    descripcion: body.descripcion,
+    estado: body.estado,
+    imagen: body.imagen,
+    alumnos: body.alumnos,
+    calificacion: body.calificacion
+  });
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  try {
+    const nuevoCurso = await logic.crearCurso(value);
+    res.status(201).json(nuevoCurso);
+  } catch (err) {
+    if (err.message === 'El curso con este título ya existe') {
+      return res.status(409).json({ error: err.message });
     }
-    res.json(resultados);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
-// Obtener usuario por ID con sus cursos
-async function obtenerCursoConUsuarios(req, res) {
-    try {
-        const curso = await logic.obtenerCursoPorId(req.params.id);
-        if (!curso) {
-            return res.status(404).json({ error: 'Curso no encontrado' });
-        }
-        const usuarios = await logic.obtenerUsuariosPorCursoId(req.params.id);
-        res.json({ curso, usuarios });
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+// Controlador para actualizar un curso
+const actualizarCurso = async (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+  const { error, value } = cursoSchemaValidation.validate({
+    titulo: body.titulo,
+    descripcion: body.descripcion,
+    estado: body.estado,
+    imagen: body.imagen,
+    alumnos: body.alumnos,
+    calificacion: body.calificacion,
+  });
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  try {
+    const cursoActualizado = await logic.actualizarCurso(id, value);
+    if (!cursoActualizado) {
+      return res.status(404).json({ error: 'Curso no encontrado' });
     }
-}
+    res.json(cursoActualizado);
+  } catch (err) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
 
-// Obtener curso por ID
-async function obtenerCursoPorId(req, res) {
-    try {
-        const curso = await logic.obtenerCursoPorId(req.params.id);
-        if (curso) {
-            res.json(curso);
-        } else {
-            res.status(404).json({ error: 'Curso no encontrado' });
-        }
-    } catch (err) {
-        res.status(400).json({ error: err.message });
+// Controlador para desactivar un curso
+const desactivarCurso = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const cursoDesactivado = await logic.desactivarCurso(id);
+    if (!cursoDesactivado) {
+      return res.status(404).json({ error: 'Curso no encontrado' });
     }
-}
+    res.json(cursoDesactivado);
+  } catch (err) {
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
 
+// Controlador para guardar una colección de cursos
+const guardarColeccionCursos = async (req, res) => {
+  const { cursos } = req.body; // Acceder a los cursos dentro de req.body
+
+  if (!Array.isArray(cursos)) {
+    return res.status(400).json({ error: 'La colección de cursos debe ser un array.' });
+  }
+  // Validación de cada curso en la colección
+  for (let curso of cursos) {
+    const { error } = cursoSchemaValidation.validate({
+      titulo: curso.titulo,
+      descripcion: curso.descripcion,
+      estado: curso.estado,
+      imagen: curso.imagen,
+      alumnos: curso.alumnos,
+      calificacion: curso.calificacion,
+    });
+    if (error) {
+      return res.status(400).json({ error: `Error en curso "${curso.titulo}": ${error.details[0].message}` });
+    }
+  }
+  try {
+    // Guardar la colección de cursos
+    const resultados = await logic.guardarCursos(cursos);
+    res.status(201).json({ message: 'Cursos guardados exitosamente', cursos: resultados });
+  } catch (err) {
+    res.status(500).json({ error: 'Error interno del servidor al guardar cursos', details: err.message });
+  }
+};
+
+// Controlador para buscar un curso por su ID
+const obtenerCursoPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const curso = await logic.buscarCursoPorId(id);
+    if (!curso) {
+      return res.status(404).json({ error: `Curso con ID ${id} no encontrado` });
+    }
+    res.json(curso);
+  } catch (err) {
+    res.status(500).json({ error: `Error interno del servidor al buscar el curso: ${err.message}` });
+  }
+};
+
+// Controlador para buscar usuarios asociados a un curso
+const obtenerUsuariosPorCurso = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const usuarios = await logic.buscarUsuariosPorCurso(id);
+    if (!usuarios || usuarios.length === 0) {
+      return res.status(404).json({ error: `No se encontraron usuarios para el curso con ID ${id}` });
+    }
+    res.json(usuarios);
+  } catch (err) {
+    res.status(500).json({ error: `Error interno del servidor al buscar los usuarios del curso: ${err.message}` });
+  }
+};
+
+// Exportar los controladores
 module.exports = {
-    crearCurso,
-    actualizarCurso,
-    desactivarCurso,
-    listarCursosActivos,
-    crearColeccionCursos,
-    obtenerCursoConUsuarios,
-    obtenerCursoPorId 
-}
+  listarCursosActivos,
+  crearCurso,
+  actualizarCurso,
+  desactivarCurso,
+  guardarColeccionCursos,
+  obtenerCursoPorId,
+  obtenerUsuariosPorCurso,
+};

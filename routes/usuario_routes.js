@@ -143,6 +143,7 @@ router.post('/', usuarioController.crearUsuario);
  *           examples:
  *             ejemplo1:
  *               value:
+ *                 email: "usuario.nuevo@gmail.com"
  *                 nombre: "Usuario Actualizado"
  *                 password: "nuevacontraseña123"
  *                 estado: true
@@ -268,11 +269,11 @@ router.delete('/:email', usuarioController.desactivarUsuario);
  *                     imagen: "https://ejemplo.com/imagen-coleccion-usuario3.jpg"
  *                     cursos: []
  */
-router.post('/coleccion', usuarioController.crearColeccionUsuarios);
+router.post('/coleccion', usuarioController.guardarColeccionUsuarios);
 
 /**
  * @swagger
- * /api/usuarios/{id}/cursos:
+ * /api/usuarios/{usarioId}/cursos:
  *   get:
  *     tags: 
  *       - Usuarios
@@ -313,70 +314,79 @@ router.post('/coleccion', usuarioController.crearColeccionUsuarios);
  *       404:
  *         description: Usuario no encontrado.
  */
-router.get('/:id/cursos', usuarioController.obtenerUsuarioConCursos);
+router.get('/:usuarioId/cursos', usuarioController.listarCursosDeUsuario);
 
 /**
  * @swagger
- * /api/usuarios/{id}:
- *   get:
- *     tags: 
- *       - Usuarios
- *     summary: Obtener un usuario mediante su ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID del usuario
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Usuario obtenido correctamente.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Usuario'
- *             examples:
- *               ejemplo1:
- *                 value:
- *                   id: "61f7d2bbf1a2b4b5c3cdb71d"
- *                   email: "juan.perez@gmail.com"
- *                   nombre: "Juan Pérez"
- *                   estado: true
- *                   imagen: "https://ejemplo.com/imagen-usuario.jpg"
- *                   cursos: ["61f7d2bbf1a2b4b5c3cdb71f", "61f7d2bbf1a2b4b5c3cdb720"]
- *       404:
- *         description: Usuario no encontrado.
- */
-router.get('/:id', usuarioController.obtenerUsuarioPorId);
-
-/**
- * @swagger
- * /api/usuarios/{id}/cursos/{cursoId}:
+ * /api/usuarios/{email}/cursos:
  *   post:
  *     tags: 
  *       - Usuarios
- *     summary: Asociar un curso a un usuario
+ *     summary: Agregar uno o varios cursos a un usuario
+ *     description: Permite agregar uno o varios cursos a un usuario utilizando su correo electrónico.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: email
  *         required: true
- *         description: ID del usuario
+ *         description: Correo electrónico del usuario
  *         schema:
  *           type: string
- *       - in: path
- *         name: cursoId
- *         required: true
- *         description: ID del curso que se quiere asociar
- *         schema:
- *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cursos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Array de IDs de cursos que se quieren asociar al usuario
+ *           examples:
+ *             ejemplo1:
+ *               summary: Ejemplo de un array de cursos
+ *               value: 
+ *                 cursos: 
+ *                   - "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   - "61f7d2bbf1a2b4b5c3cdb720"
  *     responses:
  *       200:
- *         description: Curso asociado correctamente.
+ *         description: Cursos asociados correctamente al usuario.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 usuario:
+ *                   $ref: '#/components/schemas/Usuario'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   usuario:
+ *                     id: "61f7d2bbf1a2b4b5c3cdb71d"
+ *                     email: "juan.perez@gmail.com"
+ *                     nombre: "Juan Pérez"
+ *                     cursos:
+ *                       - id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                         titulo: "Curso 1"
+ *                         descripcion: "Descripción del Curso 1"
+ *                         estado: "activo"
+ *                         imagen: "https://ejemplo.com/imagen-curso1.jpg"
+ *                       - id: "61f7d2bbf1a2b4b5c3cdb720"
+ *                         titulo: "Curso 2"
+ *                         descripcion: "Descripción del Curso 2"
+ *                         estado: "activo"
+ *                         imagen: "https://ejemplo.com/imagen-curso2.jpg"
+ *       400:
+ *         description: Se requiere un array de IDs de cursos.
  *       404:
- *         description: Usuario o curso no encontrado.
+ *         description: Usuario no encontrado.
+ *       500:
+ *         description: Error interno del servidor.
  */
-router.post('/:id/cursos/:cursoId', usuarioController.asociarCurso);
+
+router.post('/:email/cursos', usuarioController.agregarCursosAUsuario);
 
 module.exports = router;
 

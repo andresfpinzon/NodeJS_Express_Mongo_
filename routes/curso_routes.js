@@ -280,7 +280,7 @@ router.delete('/:id', cursoController.desactivarCurso);
  *                     alumnos: 300
  *                     calificacion: 4.9
  */
-router.post('/coleccion', cursoController.crearColeccionCursos);
+router.post('/coleccion', cursoController.guardarColeccionCursos);
 
 /**
  * @swagger
@@ -327,7 +327,7 @@ router.post('/coleccion', cursoController.crearColeccionCursos);
  *       404:
  *         description: Curso no encontrado.
  */
-router.get('/:id/usuarios', cursoController.obtenerCursoConUsuarios);
+router.get('/:id/usuarios', cursoController.obtenerUsuariosPorCurso);
 
 /**
  * @swagger
