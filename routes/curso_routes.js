@@ -227,6 +227,7 @@ router.delete('/:id', cursoController.desactivarCurso);
  *           examples:
  *             ejemplo1:
  *               value:
+ *                 cursos:
  *                 - titulo: "Curso 1"
  *                   descripcion: "Descripción del Curso 1"
  *                   estado: true

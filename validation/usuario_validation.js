@@ -19,7 +19,7 @@ const schema = Joi.object({
         .min(3)
         .max(30)
         .required()
-        .pattern(/^[A-Za-záéíóú]+$/) 
+        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/) 
         .messages({
             'string.base': 'El nombre debe ser un texto',
             'string.empty': 'El nombre no puede estar vacío.',
@@ -33,7 +33,7 @@ const schema = Joi.object({
         .min(5) 
         .max(30)
         .required()
-        .pattern(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{6,30}$/)
+        .pattern(/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?ñÑ]{6,30}$/)
         .messages({
             'string.base': 'La contraseña debe ser un texto',
             'string.empty': 'La contraseña no puede estar vacía.',

@@ -221,18 +221,19 @@ router.delete('/:email', usuarioController.desactivarUsuario);
  *           examples:
  *             ejemplo1:
  *               value:
+ *                 usuarios:
  *                 - email: "coleccion.usuario1@gmail.com"
- *                   nombre: "Coleccion Usuario 1"
+ *                   nombre: "Coleccion Usuario uno"
  *                   password: "contraseña123"
  *                   estado: true
  *                   imagen: "https://ejemplo.com/imagen-coleccion-usuario1.jpg"
  *                 - email: "coleccion.usuario2@gmail.com"
- *                   nombre: "Coleccion Usuario 2"
+ *                   nombre: "Coleccion Usuario dos"
  *                   password: "contraseña123"
  *                   estado: true
  *                   imagen: "https://ejemplo.com/imagen-coleccion-usuario2.jpg"
  *                 - email: "coleccion.usuario3@gmail.com"
- *                   nombre: "Coleccion Usuario 3"
+ *                   nombre: "Coleccion Usuario tres"
  *                   password: "contraseña123"
  *                   estado: true
  *                   imagen: "https://ejemplo.com/imagen-coleccion-usuario3.jpg"
@@ -250,19 +251,19 @@ router.delete('/:email', usuarioController.desactivarUsuario);
  *                 value:
  *                   - id: "61f7d2bbf1a2b4b5c3cdb723"
  *                     email: "coleccion.usuario1@gmail.com"
- *                     nombre: "Coleccion Usuario 1"
+ *                     nombre: "Coleccion Usuario uno"
  *                     estado: true
  *                     imagen: "https://ejemplo.com/imagen-coleccion-usuario1.jpg"
  *                     cursos: []
  *                   - id: "61f7d2bbf1a2b4b5c3cdb724"
  *                     email: "coleccion.usuario2@gmail.com"
- *                     nombre: "Coleccion Usuario 2"
+ *                     nombre: "Coleccion Usuario dos"
  *                     estado: true
  *                     imagen: "https://ejemplo.com/imagen-coleccion-usuario2.jpg"
  *                     cursos: []
  *                   - id: "61f7d2bbf1a2b4b5c3cdb725"
  *                     email: "coleccion.usuario3@gmail.com"
- *                     nombre: "Coleccion Usuario 3"
+ *                     nombre: "Coleccion Usuario tres"
  *                     estado: true
  *                     imagen: "https://ejemplo.com/imagen-coleccion-usuario3.jpg"
  *                     cursos: []
