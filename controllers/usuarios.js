@@ -114,7 +114,7 @@ async function asociarCurso(req, res) {
         const usuarioId = req.params.id;
         const cursoId = req.params.cursoId;
 
-        let usuario = await logic.asociarCursoAUsuario(usuarioId, cursoId);
+        let usuario = await logic.asociarCursosAUsuario(usuarioId, cursoId);
         res.json({ usuario });
     } catch (err) {
         res.status(400).json({ error: err.message });

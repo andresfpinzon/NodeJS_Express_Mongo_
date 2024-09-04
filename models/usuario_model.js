@@ -1,4 +1,3 @@
-const { ref } = require('joi');
 const mongoose = require('mongoose');
 
 const usuarioSchema = new mongoose.Schema({

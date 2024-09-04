@@ -9,7 +9,10 @@ async function crearCurso(req, res) {
         titulo: body.titulo,
         descripcion: body.descripcion,
         alumnos: body.alumnos,
-        calificacion: body.calificacion
+        calificacion: body.calificacion,
+        estado: body.estado,
+        imagen: body.imagen,
+        curso: body.curso
     });
 
     if (!error) {
@@ -26,11 +29,14 @@ async function crearCurso(req, res) {
 
 // Actualizar curso
 function actualizarCurso(req, res) {
+    
     const { error, value } = schema.validate({
         titulo: req.body.titulo,
         descripcion: req.body.descripcion,
         alumnos: req.body.alumnos,
-        calificacion: req.body.calificacion
+        calificacion: req.body.calificacion,
+        estado: body.estado,
+        imagen: body.imagen
     });
 
     if (!error) {
@@ -49,11 +55,25 @@ function desactivarCurso(req, res) {
         .catch(err => res.status(400).json(err));
 };
 
+/*
 // Listar cursos activos
 function listarCursosActivos(req, res) {
     logic.listarCursosActivos()
         .then(cursos => res.json(cursos))
         .catch(err => res.status(400).json(err));
+};*/
+
+// Controlador para listar los cursos activos
+const listarCursosActivos = async (req, res) => {
+    try {
+        const cursosActivos = await logic.listarCursosActivos();
+        if (cursosActivos.length === 0) {
+        return res.status(204).send(); // 204 No Content
+        }
+        res.json(cursosActivos);
+    } catch (err) {
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 };
 
 // Crear colecciones de cursos

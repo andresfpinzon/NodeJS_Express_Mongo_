@@ -8,7 +8,7 @@ const swaggerOptions = {
     info: {
       title: "Estas APIs Manejaran la gestion de cursos y usuarios",
       version: "1.0.0",
-      description: "",
+      description: "Documentacion de la API de Cursos y Usuarios",
       contact: {
         name: "Andres Pinzon",
       },

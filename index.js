@@ -12,7 +12,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 // Importar la configuración de Swagger
-const { swaggerUi, swaggerDocs } = require('./swagger');
+const { swaggerUi, swaggerDocs } = require('./swagger/swagger');
 
 // Obtener la cadena de conexión desde las variables de entorno
 const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
@@ -38,4 +38,5 @@ app.use('/api/cursos', cursoRoutes);
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log('Api REST Ok, y ejecutándose...');
+    console.log('Usando la ruta http://localhost:3000');
 });

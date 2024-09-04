@@ -4,6 +4,41 @@ const cursoController = require('../controllers/cursos');
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     Curso:
+ *       type: object
+ *       required:
+ *         - titulo
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: ID autogenerado del curso.
+ *         titulo:
+ *           type: string
+ *           description: Título del curso.
+ *         descripcion:
+ *           type: string
+ *           description: Descripción del curso.
+ *         estado:
+ *           type: string
+ *           description: Estado del curso (activo/inactivo).
+ *           default: true
+ *         imagen:
+ *           type: string
+ *           description: URL de la imagen del curso.
+ *         alumnos:
+ *           type: number
+ *           description: Cantidad de alumnos inscritos en el curso.
+ *           default: 0
+ *         calificacion:
+ *           type: number
+ *           description: Calificación promedio del curso.
+ *           default: 0
+ */
+
+/**
+ * @swagger
  * tags:
  *   - name: Cursos
  *     description: API para gestionar cursos
@@ -15,16 +50,33 @@ const cursoController = require('../controllers/cursos');
  *   get:
  *     tags: 
  *       - Cursos
- *     summary: Retrieve a list of active courses
+ *     summary: Obtener una lista de cursos activos
  *     responses:
  *       200:
- *         description: A list of active courses.
+ *         description: Una colección de cursos.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 type: object
+ *                 $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   - id: "61f7d2bbf1a2b4b5c3cdb71d"
+ *                     titulo: "Introducción a la Programación"
+ *                     descripcion: "Curso básico de programación con Python"
+ *                     estado: true
+ *                     imagen: "https://ejemplo.com/imagen-curso.jpg"
+ *                     alumnos: 150
+ *                     calificacion: 4.5
+ *                   - id: "61f7d2bbf1a2b4b5c3cdb71e"
+ *                     titulo: "Desarrollo Web con JavaScript"
+ *                     descripcion: "Curso avanzado de desarrollo web"
+ *                     estado: true
+ *                     imagen: "https://ejemplo.com/imagen-curso2.jpg"
+ *                     alumnos: 200
+ *                     calificacion: 4.8
  */
 router.get('/', cursoController.listarCursosActivos);
 
@@ -34,10 +86,39 @@ router.get('/', cursoController.listarCursosActivos);
  *   post:
  *     tags: 
  *       - Cursos
- *     summary: Create a new course
+ *     summary: Crear un curso
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Curso'
+ *           examples:
+ *             ejemplo1:
+ *               value:
+ *                 titulo: "Nuevo Curso de Node.js"
+ *                 descripcion: "Aprende Node.js desde cero"
+ *                 estado: true
+ *                 imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                 alumnos: 0
+ *                 calificacion: 0
  *     responses:
  *       201:
- *         description: Course created successfully.
+ *         description: Curso creado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   titulo: "Nuevo Curso de Node.js"
+ *                   descripcion: "Aprende Node.js desde cero"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 0
+ *                   calificacion: 0
  */
 router.post('/', cursoController.crearCurso);
 
@@ -47,19 +128,48 @@ router.post('/', cursoController.crearCurso);
  *   put:
  *     tags: 
  *       - Cursos
- *     summary: Update an existing course by ID
+ *     summary: Actualizar un curso mediante su ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the course to update
+ *         description: ID del curso a actualizar.
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Curso'
+ *           examples:
+ *             ejemplo1:
+ *               value:
+ *                 titulo: "Curso de Node.js Actualizado"
+ *                 descripcion: "Contenido actualizado para Node.js"
+ *                 estado: true
+ *                 imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                 alumnos: 0
+ *                 calificacion: 0
  *     responses:
  *       200:
- *         description: Course updated successfully.
+ *         description: Curso actualizado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   titulo: "Curso de Node.js Actualizado"
+ *                   descripcion: "Contenido actualizado para Node.js"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 0
+ *                   calificacion: 0
  *       404:
- *         description: Course not found.
+ *         description: Curso no encontrado.
  */
 router.put('/:id', cursoController.actualizarCurso);
 
@@ -69,19 +179,33 @@ router.put('/:id', cursoController.actualizarCurso);
  *   delete:
  *     tags: 
  *       - Cursos
- *     summary: Deactivate a course by ID
+ *     summary: Desactivar un curso mediante su ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the course to deactivate
+ *         description: ID del curso a desactivar.
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Course deactivated successfully.
+ *         description: Curso desactivado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   titulo: "Curso de Node.js"
+ *                   descripcion: "Aprende Node.js desde cero"
+ *                   estado: false
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 0
+ *                   calificacion: 0
  *       404:
- *         description: Course not found.
+ *         description: Curso no encontrado.
  */
 router.delete('/:id', cursoController.desactivarCurso);
 
@@ -91,10 +215,69 @@ router.delete('/:id', cursoController.desactivarCurso);
  *   post:
  *     tags: 
  *       - Cursos
- *     summary: Create a collection of courses
+ *     summary: Crear una colección de cursos
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/Curso'
+ *           examples:
+ *             ejemplo1:
+ *               value:
+ *                 - titulo: "Curso 1"
+ *                   descripcion: "Descripción del Curso 1"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso1.jpg"
+ *                   alumnos: 100
+ *                   calificacion: 4.2
+ *                 - titulo: "Curso 2"
+ *                   descripcion: "Descripción del Curso 2"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso2.jpg"
+ *                   alumnos: 200
+ *                   calificacion: 4.7
+ *                 - titulo: "Curso 3"
+ *                   descripcion: "Descripción del Curso 3"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 300
+ *                   calificacion: 4.9
  *     responses:
  *       201:
- *         description: Courses collection created successfully.
+ *         description: Cursos cargados correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   - id: "61f7d2bbf1a2b4b5c3cdb71d"
+ *                     titulo: "Curso 1"
+ *                     descripcion: "Descripción del Curso 1"
+ *                     estado: true
+ *                     imagen: "https://ejemplo.com/imagen-curso1.jpg"
+ *                     alumnos: 100
+ *                     calificacion: 4.2
+ *                   - id: "61f7d2bbf1a2b4b5c3cdb71e"
+ *                     titulo: "Curso 2"
+ *                     descripcion: "Descripción del Curso 2"
+ *                     estado: true
+ *                     imagen: "https://ejemplo.com/imagen-curso2.jpg"
+ *                     alumnos: 200
+ *                     calificacion: 4.7
+ *                   - id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                     titulo: "Curso 3"
+ *                     descripcion: "Descripción del Curso 3"
+ *                     estado: true
+ *                     imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                     alumnos: 300
+ *                     calificacion: 4.9
  */
 router.post('/coleccion', cursoController.crearColeccionCursos);
 
@@ -104,19 +287,44 @@ router.post('/coleccion', cursoController.crearColeccionCursos);
  *   get:
  *     tags: 
  *       - Cursos
- *     summary: Retrieve a course with its associated users by course ID
+ *     summary: Obtener un curso con los usuarios registrados en este
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the course
+ *         description: ID del curso
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Course with users retrieved successfully.
+ *         description: Curso con sus usuarios obtenidos correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   titulo: "Curso de Node.js"
+ *                   descripcion: "Aprende Node.js desde cero"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 2
+ *                   calificacion: 4.5
+ *                   usuarios:
+ *                     - id: "61f7d2bbf1a2b4b5c3cdb71d"
+ *                       nombre: "Juan Pérez"
+ *                       email: "juan.perez@gmail.com"
+ *                       estado: true
+ *                       imagen: "https://ejemplo.com/imagen-usuario1.jpg"
+ *                     - id: "61f7d2bbf1a2b4b5c3cdb71e"
+ *                       nombre: "Ana Gómez"
+ *                       email: "ana.gomez@gmail.com"
+ *                       estado: true
+ *                       imagen: "https://ejemplo.com/imagen-usuario2.jpg"
  *       404:
- *         description: Course not found.
+ *         description: Curso no encontrado.
  */
 router.get('/:id/usuarios', cursoController.obtenerCursoConUsuarios);
 
@@ -126,19 +334,33 @@ router.get('/:id/usuarios', cursoController.obtenerCursoConUsuarios);
  *   get:
  *     tags: 
  *       - Cursos
- *     summary: Retrieve a course by its ID
+ *     summary: Obtener un curso mediante su ID
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the course
+ *         description: ID del curso
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Course retrieved successfully.
+ *         description: Curso obtenido correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Curso'
+ *             examples:
+ *               ejemplo1:
+ *                 value:
+ *                   id: "61f7d2bbf1a2b4b5c3cdb71f"
+ *                   titulo: "Curso de Node.js"
+ *                   descripcion: "Aprende Node.js desde cero"
+ *                   estado: true
+ *                   imagen: "https://ejemplo.com/imagen-curso3.jpg"
+ *                   alumnos: 0
+ *                   calificacion: 0
  *       404:
- *         description: Course not found.
+ *         description: Curso no encontrado.
  */
 router.get('/:id', cursoController.obtenerCursoPorId);
 
