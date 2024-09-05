@@ -77,7 +77,6 @@ https.createServer(options, app).listen(port, () => {
   console.log('Api REST Ok, y ejecutándose...');
   console.log(`Servidor HTTPS corriendo en  https://localhost:${port}`);
 });
-
 /*
 // servidor normal
 app.listen(port, () => {
