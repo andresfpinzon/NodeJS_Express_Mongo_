@@ -4,7 +4,7 @@ require('dotenv').config();
 
 //const usuarios = require('./controllers/usuarios')
 //const cursos = require('./controllers/cursos')
-
+const seedDatabase = require('./seed/seeds')
 const usuarioRoutes = require('./routes/usuario_routes');
 const cursoRoutes = require('./routes/curso_routes');
 
@@ -27,9 +27,13 @@ const connectionString = process.env.MONGO_DB_CONNECTION_STRING;
 
 // Conexión a la base de datos mongodb
 mongoose.connect(connectionString)
-    .then(() => console.log('Conectado a MongoDB...'))
+    .then(() => {
+        console.log('Conectado a MongoDB...');
+        // Llamamos a la función para sembrar la base de datos aquí
+        seedDatabase(); 
+    })
     .catch(err => console.log('No se pudo conectar con MongoDB...', err));
-
+    
 // middleware
 const app = express();
 
