@@ -6,7 +6,7 @@ const cursoSchemaValidation = Joi.object({
         .min(5)
         .max(100)
         .required()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9 .#-]{3,100}$/)
+        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9 .,;:'"!?()#-]{3,100}$/)
         .messages({
             'string.empty': 'El título no puede estar vacío.',
             'string.min': 'El título debe tener al menos 5 caracteres.',
