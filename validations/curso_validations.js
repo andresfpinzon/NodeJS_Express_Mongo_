@@ -19,7 +19,7 @@ const cursoSchemaValidation = Joi.object({
         .min(10)
         .max(500)
         .optional()
-        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9 .#-]{10,500}$/)
+        .pattern(/^[A-Za-záéíóúÁÉÍÓÚñÑ0-9 .,;:'"!?()#-]{10,500}$/)
         .messages({
             'string.min': 'La descripción debe tener al menos 10 caracteres.',
             'string.max': 'La descripción no puede exceder los 500 caracteres.',
