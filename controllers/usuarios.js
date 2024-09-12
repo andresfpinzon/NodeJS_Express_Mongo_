@@ -127,6 +127,20 @@ const guardarColeccionUsuarios = async (req, res) => {
     }
 };
 
+// Controlador para actualizar los cursos del usuario
+const actualizarCursosDeUsuario = async (req, res) => {
+    const {email} = req.params;
+    const {cursos} = req.body;
+
+    try{
+        // llama al servicio para actualizar los cursos del usuario
+        const usuarioactualizado = await logic.actualizarCursosDeUsuario(email, cursos);
+        res.json({message: 'Cursos actualizados correctamente', susuario: usuarioactualizado});
+    }catch (error) {
+        res.status(500).json({error: error.message || 'Error al actualizar los cursos del usuario'});
+    }
+}
+
 // Exportar los controladores
 module.exports = {
     listarUsuariosActivos,
@@ -135,5 +149,6 @@ module.exports = {
     desactivarUsuario,
     agregarCursosAUsuario,
     listarCursosDeUsuario,
-    guardarColeccionUsuarios
+    guardarColeccionUsuarios,
+    actualizarCursosDeUsuario
 };

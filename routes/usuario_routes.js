@@ -388,5 +388,62 @@ router.get('/:usuarioId/cursos', usuarioController.listarCursosDeUsuario);
 
 router.post('/:email/cursos', usuarioController.agregarCursosAUsuario);
 
+/**
+ * @swagger
+ * /api/usuarios/{email}/cursos:
+ *   put:
+ *     summary: Actualiza los cursos asignados a un usuario
+ *     tags:
+ *       - Usuarios
+ *     parameters:
+ *       - in: path
+ *         name: email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Email del usuario cuyo curso se actualizará
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               cursos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["curso1", "curso2"]
+ *             description: Lista de IDs de cursos que se asignarán al usuario
+ *     responses:
+ *       200:
+ *         description: Cursos actualizados con éxito para el usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: "12345"
+ *                 email:
+ *                   type: string
+ *                   example: "juan.perez@example.com"
+ *                 nombre:
+ *                   type: string
+ *                   example: "Juan Pérez"
+ *                 cursos:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["curso1", "curso2"]
+ *       400:
+ *         description: Error en la solicitud, por ejemplo, si el email es inválido o la lista de cursos está mal formateada
+ *       404:
+ *         description: Usuario no encontrado
+ */
+router.put('/:email/cursos', usuarioController.actualizarCursosDeUsuario);
+
+
 module.exports = router;
 

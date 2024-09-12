@@ -37,7 +37,7 @@ const usuarioSchemaValidation = Joi.object({
         .messages({
             'string.base': 'La contraseña debe ser un texto',
             'string.empty': 'La contraseña no puede estar vacía.',
-            'string.min': 'La contraseña debe tener al menos 8 caracteres.',
+            'string.min': 'La contraseña debe tener al menos 6 caracteres.',
             'string.max': 'La contraseña no puede exceder los 30 caracteres.',
             'string.pattern.base': 'La contraseña solo puede contener letras, números y ciertos caracteres especiales.',
             'any.required': 'La contraseña es un campo requerido'

@@ -135,6 +135,23 @@ async function listarCursosDeUsuario(usuarioId) {
     }
 }
 
+// Función para actualizar los cursos del usuario 
+async function actualizarCursosDeUsuario(email, cursos) {
+    try {
+      const usuario = await Usuario.findOne({ email: email });
+      if (!usuario){
+        throw new Error ('Usuario no encontrado');
+      }
+      usuario.cursos = cursos; // Actualiza los cursoso del usuario
+      await usuario.save();
+      
+      return usuario; //Devuelve el usuario actualizado
+  
+    }catch (error) {
+      throw new Error (error.message || 'Error al actualizar los cursos del usuario' );
+    }
+  }
+
 module.exports = {
     agregarCursosAUsuario,
     listarCursosDeUsuario,
@@ -142,5 +159,6 @@ module.exports = {
     actualizarUsuario,
     desactivarUsuario,
     listarUsuariosActivos,
-    guardarColeccionUsuarios
+    guardarColeccionUsuarios,
+    actualizarCursosDeUsuario
 };
